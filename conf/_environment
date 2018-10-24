@@ -1,0 +1,4 @@
+#!/bin/sh
+export username=sahil.sawhney@hpe.com
+export password=KnoldusTemp5555
+export dcos_cluster_name=Jupiter
