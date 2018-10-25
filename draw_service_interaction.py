@@ -22,7 +22,7 @@ def main(args):
     infosight_service = \
         get_associated_services(assoc_services, 'INFOSIGHT',
                                 service_config, starting_point)
-
+    elastic_hosts = accumulate_all_elasticsearch(service_config)
     return
 
 
@@ -48,7 +48,7 @@ def get_associated_services(assoc_services, pattern, service_config, starting_po
         if pattern in key:
             # print assoc_services[key].split(':')[1]
             services.append((starting_point,
-                find_service_id_by_port(int(assoc_services[key].split(':')[1]), service_config)
+                             find_service_id_by_port(int(assoc_services[key].split(':')[1]), service_config)
                              ))
     return services
 
@@ -66,6 +66,18 @@ def checkCommandStatus(command_status):
         exit(1)
     else:
         return
+
+
+def accumulate_all_elasticsearch(service_config):
+    elastic_hosts = []
+    pattern = 'ELASTICSEARCH_HOSTS_'
+    for service in service_config:
+        if 'env' in service:
+            environment = service['env']
+        for env_var in environment:
+            if pattern in env_var:
+                elastic_hosts.append(environment[env_var])
+    return set(elastic_hosts)
 
 
 def getLatestConfiguration(args):
