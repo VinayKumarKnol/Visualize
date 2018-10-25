@@ -11,10 +11,16 @@ import logging
 def main(args):
     # getLatestConfiguration(args)
     service_config = load_service_config('conf/service.json')
-    for service in service_config:
-        if 'container' in service:
-            print service['container']
+    starting_point = '/nginx-qa-infosight'
+    service_json =  find_service_id(starting_point, service_config)
+    print service_json
     return
+
+def find_service_id(service_id, service_config):
+    for service in service_config:
+        if service_id in service['id']:
+            return service
+
 
 
 def load_service_config(config_location):
