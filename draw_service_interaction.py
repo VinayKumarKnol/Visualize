@@ -10,7 +10,18 @@ import logging
 
 def main(args):
     # getLatestConfiguration(args)
+    service_config = load_service_config('conf/service.json')
+    for service in service_config:
+        if 'container' in service:
+            print service['container']
     return
+
+
+def load_service_config(config_location):
+    service_file = open(config_location, 'r')
+    service_json = json.load(service_file)
+    service_file.close()
+    return service_json
 
 
 def checkCommandStatus(command_status):
@@ -35,7 +46,7 @@ def getLatestConfiguration(args):
             credentials = json.load(credentials)
             # print credentials
             print("==Trying to connect to dcos cluster "
-                         + args.dcos_cluster_name)
+                  + args.dcos_cluster_name)
             command = clusterAttach.substitute(dcos_cluster_name=args.dcos_cluster_name)
             checkCommandStatus(subprocess.call(command.split(' ')))
 
@@ -48,7 +59,7 @@ def getLatestConfiguration(args):
             outFile_conf = open('conf/service.json', 'w')
             outFile_conf.write(command_out)
             outFile_conf.close()
-            print\
+            print \
                 ("==json is now available at conf/service.json.")
 
 
