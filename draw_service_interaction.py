@@ -9,7 +9,7 @@ import logging
 
 
 def main(args):
-    getLatestConfiguration(args)
+    # getLatestConfiguration(args)
     return
 
 
@@ -34,7 +34,7 @@ def getLatestConfiguration(args):
         with open(credentials_file_loc, 'r') as credentials:
             credentials = json.load(credentials)
             # print credentials
-            logging.info("==Trying to connect to dcos cluster "
+            print("==Trying to connect to dcos cluster "
                          + args.dcos_cluster_name)
             command = clusterAttach.substitute(dcos_cluster_name=args.dcos_cluster_name)
             checkCommandStatus(subprocess.call(command.split(' ')))
@@ -43,12 +43,13 @@ def getLatestConfiguration(args):
                                            password=credentials['sahil.sawhney']['password'])
             checkCommandStatus(subprocess.call(command.split(' ')))
 
-            logging.info("==Getting the marathon json from cluster")
+            print ("==Getting the marathon json from cluster")
             command_out = subprocess.check_output(getConfig.split(' '))
             outFile_conf = open('conf/service.json', 'w')
             outFile_conf.write(command_out)
             outFile_conf.close()
-            logging.info("==json is now available at conf/service.json.")
+            print\
+                ("==json is now available at conf/service.json.")
 
 
 def parseArgs():
