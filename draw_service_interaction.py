@@ -10,10 +10,19 @@ import logging
 
 def main(args):
     # getLatestConfiguration(args)
+    # print find_service_id_by_port(5000, service_config)
+    # print assoc_services.keys()
     service_config = load_service_config('conf/service.json')
     starting_point = '/nginx-qa-infosight'
     service_json = find_service_id(starting_point, service_config)
-    print find_service_id_by_port(5000, service_config)
+    assoc_services = service_json['env']
+    oculus_services = \
+        get_associated_services(assoc_services, 'OCULUS',
+                                service_config, starting_point)
+    infosight_service = \
+        get_associated_services(assoc_services, 'INFOSIGHT',
+                                service_config, starting_point)
+
     return
 
 
@@ -31,6 +40,17 @@ def find_service_id_by_port(service_port, service_config):
                 for port_mapping in service['container']['portMappings']:
                     if service_port == port_mapping['servicePort']:
                         return service['id']
+
+
+def get_associated_services(assoc_services, pattern, service_config, starting_point):
+    services = list()
+    for key in assoc_services.keys():
+        if pattern in key:
+            # print assoc_services[key].split(':')[1]
+            services.append((starting_point,
+                find_service_id_by_port(int(assoc_services[key].split(':')[1]), service_config)
+                             ))
+    return services
 
 
 def load_service_config(config_location):
