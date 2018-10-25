@@ -12,15 +12,25 @@ def main(args):
     # getLatestConfiguration(args)
     service_config = load_service_config('conf/service.json')
     starting_point = '/nginx-qa-infosight'
-    service_json =  find_service_id(starting_point, service_config)
-    print service_json
+    service_json = find_service_id(starting_point, service_config)
+    print find_service_id_by_port(5000, service_config)
     return
+
 
 def find_service_id(service_id, service_config):
     for service in service_config:
         if service_id in service['id']:
             return service
 
+
+def find_service_id_by_port(service_port, service_config):
+    for service in service_config:
+        if 'container' in service:
+            # print service['container']
+            if 'portMappings' in service['container']:
+                for port_mapping in service['container']['portMappings']:
+                    if service_port == port_mapping['servicePort']:
+                        return service['id']
 
 
 def load_service_config(config_location):
