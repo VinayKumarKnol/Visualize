@@ -8,21 +8,24 @@ from string import Template
 import logging
 
 
+
 def main(args):
-    # getLatestConfiguration(args)
+    # get_latest_configuration(args)
     # print find_service_id_by_port(5000, service_config)
     # print assoc_services.keys()
-    service_config = load_service_config('conf/service.json')
+    service_config = load_config('conf/service.json')
+    elastic_config = load_config('conf/elastic_search.json')
     starting_point = '/nginx-qa-infosight'
     service_json = find_service_id(starting_point, service_config)
     assoc_services = service_json['env']
-    oculus_services = \
-        get_associated_services(assoc_services, 'OCULUS',
-                                service_config, starting_point)
-    infosight_service = \
-        get_associated_services(assoc_services, 'INFOSIGHT',
-                                service_config, starting_point)
-    elastic_hosts = accumulate_all_elasticsearch(service_config)
+    # oculus_services = \
+    #     get_associated_services(assoc_services, 'OCULUS',
+    #                             service_config, starting_point)
+    # infosight_service = \
+    #     get_associated_services(assoc_services, 'INFOSIGHT',
+    #                             service_config, starting_point)
+                                
+
     return
 
 
@@ -31,6 +34,11 @@ def find_service_id(service_id, service_config):
         if service_id in service['id']:
             return service
 
+
+def get_elasticsearch_name(elastic_config, hosts):
+    for elastic in elastic_config:
+        if hosts in elastic_config[elastic]:
+            return elastic
 
 def find_service_id_by_port(service_port, service_config):
     for service in service_config:
@@ -53,14 +61,14 @@ def get_associated_services(assoc_services, pattern, service_config, starting_po
     return services
 
 
-def load_service_config(config_location):
+def load_config(config_location):
     service_file = open(config_location, 'r')
     service_json = json.load(service_file)
     service_file.close()
     return service_json
 
 
-def checkCommandStatus(command_status):
+def check_command_status(command_status):
     if command_status is not 0:
         logging.error("==Not able to connect to the cluster. check vpn/credentials")
         exit(1)
@@ -80,7 +88,7 @@ def accumulate_all_elasticsearch(service_config):
     return set(elastic_hosts)
 
 
-def getLatestConfiguration(args):
+def get_latest_configuration(args):
     if not os.path.exists(args.credentials):
         logging.warning('Location of credentials doesn\'t exist.'
                         ' Create credentials.json file')
@@ -96,11 +104,11 @@ def getLatestConfiguration(args):
             print("==Trying to connect to dcos cluster "
                   + args.dcos_cluster_name)
             command = clusterAttach.substitute(dcos_cluster_name=args.dcos_cluster_name)
-            checkCommandStatus(subprocess.call(command.split(' ')))
+            check_command_status(subprocess.call(command.split(' ')))
 
             command = authLogin.substitute(username=credentials['sahil.sawhney']['username'],
                                            password=credentials['sahil.sawhney']['password'])
-            checkCommandStatus(subprocess.call(command.split(' ')))
+            check_command_status(subprocess.call(command.split(' ')))
 
             print ("==Getting the marathon json from cluster")
             command_out = subprocess.check_output(getConfig.split(' '))
