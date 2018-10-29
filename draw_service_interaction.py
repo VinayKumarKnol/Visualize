@@ -28,6 +28,7 @@ def main(args):
     infosight_es = get_es_of_api(infosight_services, all_es_hosts, service_config)
     oculus_es = get_es_of_api(oculus_services, all_es_hosts, service_config)
 
+
     return
 
 
