@@ -6,7 +6,7 @@ import traceback
 import subprocess
 from string import Template
 import logging
-
+import requests
 
 
 def main(args):
@@ -14,17 +14,19 @@ def main(args):
     # print find_service_id_by_port(5000, service_config)
     # print assoc_services.keys()
     service_config = load_config('conf/service.json')
-    elastic_config = load_config('conf/elastic_search.json')
     starting_point = '/nginx-qa-infosight'
     service_json = find_service_id(starting_point, service_config)
+
+    all_es_hosts = get_elasticsearch_list(service_config)
+
     assoc_services = service_json['env']
-    # oculus_services = \
-    #     get_associated_services(assoc_services, 'OCULUS',
-    #                             service_config, starting_point)
-    # infosight_service = \
-    #     get_associated_services(assoc_services, 'INFOSIGHT',
-    #                             service_config, starting_point)
-                                
+    oculus_services = \
+        get_associated_services(assoc_services, 'OCULUS',
+                                service_config, starting_point)
+    infosight_services = \
+        get_associated_services(assoc_services, 'INFOSIGHT',
+                                service_config, starting_point)
+
 
     return
 
@@ -35,10 +37,18 @@ def find_service_id(service_id, service_config):
             return service
 
 
-def get_elasticsearch_name(elastic_config, hosts):
-    for elastic in elastic_config:
-        if hosts in elastic_config[elastic]:
-            return elastic
+def get_elasticsearch_list(service_config):
+    all_es_hosts = accumulate_all_elasticsearch(service_config)
+    es_hosts_cluster_name = {}
+    for es_host in all_es_hosts:
+        es_hosts_cluster_name[get_elasticsearch_name(es_host)] = es_host
+    return es_hosts_cluster_name
+
+def get_elasticsearch_name(elastic_host):
+    url = 'http://' + elastic_host.split(',')[0] + ':9200'
+    response = json.loads(requests.get(url).content)
+    return response['cluster_name']
+
 
 def find_service_id_by_port(service_port, service_config):
     for service in service_config:
