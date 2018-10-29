@@ -18,7 +18,6 @@ def main(args):
     service_json = find_service_id(starting_point, service_config)
 
     all_es_hosts = get_elasticsearch_list(service_config)
-
     assoc_services = service_json['env']
     oculus_services = \
         get_associated_services(assoc_services, 'OCULUS',
@@ -26,9 +25,33 @@ def main(args):
     infosight_services = \
         get_associated_services(assoc_services, 'INFOSIGHT',
                                 service_config, starting_point)
-
+    infosight_es = get_es_of_api(infosight_services, all_es_hosts, service_config)
+    oculus_es = get_es_of_api(oculus_services, all_es_hosts, service_config)
 
     return
+
+
+def get_name_of_es_host(es_host, known_es_hosts):
+    for name, es_hosts in known_es_hosts.items():
+        if es_host == es_hosts:
+            return name
+
+
+def get_es_of_api(services_list, all_es_hosts, service_config):
+    linked_es = []
+    pattern = 'ELASTICSEARCH_HOSTS_'
+    for parent, service_id in services_list:
+        if service_id is not None:
+            service_json = find_service_id(service_id, service_config)
+            if 'env' in service_json:
+                for service, es_hosts in service_json['env'].items():
+                    # print service, es_hosts
+                    if pattern in service:
+                        es_name = get_name_of_es_host(es_hosts, all_es_hosts)
+                        # print es_name
+                        linked_es.append((service_id, service.split(pattern)[1],
+                                          es_name))
+    return linked_es
 
 
 def find_service_id(service_id, service_config):
@@ -43,6 +66,7 @@ def get_elasticsearch_list(service_config):
     for es_host in all_es_hosts:
         es_hosts_cluster_name[get_elasticsearch_name(es_host)] = es_host
     return es_hosts_cluster_name
+
 
 def get_elasticsearch_name(elastic_host):
     url = 'http://' + elastic_host.split(',')[0] + ':9200'
