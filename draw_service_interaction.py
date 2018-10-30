@@ -17,7 +17,7 @@ def main(args):
     service_config = load_config('conf/service.json')
     starting_point = '/nginx-qa-infosight'
     service_json = find_service_id(starting_point, service_config)
-    diagram = Digraph(comment=args.dcos_cluster_name + " services interaction")
+    diagram = Digraph(comment=args.dcos_cluster_name + " services interaction", engine='circo')
     all_es_hosts = get_elasticsearch_list(service_config)
     assoc_services = service_json['env']
     oculus_services = \
@@ -38,30 +38,26 @@ def main(args):
     diagram = add_nodes_to_graph(diagram, oculus_services)
     diagram = add_es_nodes_to_graph(diagram, infosight_es)
     diagram = add_es_nodes_to_graph(diagram, oculus_es)
-    # for infosight_service in infosight_services:
-    #     diagram.node(infosight_service[1])
-    #     diagram.edge(starting_point, infosight_service[1], constraint='false')
-    # # print diagram
-
-    # for oculus_service in oculus_services:
-    #     if oculus_service[1] is not None:
-    #         diagram.node(oculus_service[1])
-    #         diagram.edge(starting_point, oculus_service[1], constraint='false')
-    # print diagram
-
-    # for infosight_serv, service, es in infosight_es:
-    #     diagram.node(service + '_' + es)
-    #     diagram.edge(infosight_serv, service + '_' + es, constraint='false')
-    # print diagram
-
-    # for oculus_serv, service, es in oculus_es:
-    #     diagram.node(service + '_' + es)
-    #     diagram.edge(oculus_serv, service + '_' + es, constraint='false')
-    # print diagram
+    diagram = add_edge_to_graph(diagram, infosight_services)
+    diagram = add_edge_to_graph(diagram, oculus_services)
+    diagram = add_es_edge_to_graph(diagram, oculus_es)
 
     diagram.render('meta/service_arch', view=False)
 
     return
+
+
+def add_es_edge_to_graph(digraph, services):
+    normalize_tuple = []
+    for parent, middle, child in services:
+        normalize_tuple.append((parent, middle + '_' + child))
+    return add_edge_to_graph(digraph, normalize_tuple)
+
+
+def add_edge_to_graph(digraph, services):
+    for parent, child in services:
+        digraph.edge(str(parent), str(child), constraint='false')
+    return digraph
 
 
 def add_es_nodes_to_graph(digraph, es_nodes):
@@ -69,11 +65,11 @@ def add_es_nodes_to_graph(digraph, es_nodes):
         digraph = add_nodes_to_graph(digraph, [(parent, service + '_' + es_name)])
     return digraph
 
-def add_edges_to_graph(digraph, edges):
 
 def add_nodes_to_graph(digraph, distinct_services):
     for service in distinct_services:
-        digraph.node(str(service[1]))
+        if service is not None:
+            digraph.node(str(service[1]))
     return digraph
 
 
