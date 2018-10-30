@@ -7,6 +7,7 @@ import subprocess
 from string import Template
 import logging
 import requests
+from graphviz import Digraph
 
 
 def main(args):
@@ -16,20 +17,64 @@ def main(args):
     service_config = load_config('conf/service.json')
     starting_point = '/nginx-qa-infosight'
     service_json = find_service_id(starting_point, service_config)
-
+    diagram = Digraph(comment=args.dcos_cluster_name + " services interaction")
     all_es_hosts = get_elasticsearch_list(service_config)
     assoc_services = service_json['env']
     oculus_services = \
         get_associated_services(assoc_services, 'OCULUS',
                                 service_config, starting_point)
+    # print oculus_services
     infosight_services = \
         get_associated_services(assoc_services, 'INFOSIGHT',
                                 service_config, starting_point)
+    # print infosight_services
     infosight_es = get_es_of_api(infosight_services, all_es_hosts, service_config)
+    # print infosight_es
     oculus_es = get_es_of_api(oculus_services, all_es_hosts, service_config)
+    # print oculus_es
 
+    diagram.node(starting_point)
+    diagram = add_nodes_to_graph(diagram, infosight_services)
+    diagram = add_nodes_to_graph(diagram, oculus_services)
+    diagram = add_es_nodes_to_graph(diagram, infosight_es)
+    diagram = add_es_nodes_to_graph(diagram, oculus_es)
+    # for infosight_service in infosight_services:
+    #     diagram.node(infosight_service[1])
+    #     diagram.edge(starting_point, infosight_service[1], constraint='false')
+    # # print diagram
+
+    # for oculus_service in oculus_services:
+    #     if oculus_service[1] is not None:
+    #         diagram.node(oculus_service[1])
+    #         diagram.edge(starting_point, oculus_service[1], constraint='false')
+    # print diagram
+
+    # for infosight_serv, service, es in infosight_es:
+    #     diagram.node(service + '_' + es)
+    #     diagram.edge(infosight_serv, service + '_' + es, constraint='false')
+    # print diagram
+
+    # for oculus_serv, service, es in oculus_es:
+    #     diagram.node(service + '_' + es)
+    #     diagram.edge(oculus_serv, service + '_' + es, constraint='false')
+    # print diagram
+
+    diagram.render('meta/service_arch', view=False)
 
     return
+
+
+def add_es_nodes_to_graph(digraph, es_nodes):
+    for parent, service, es_name in es_nodes:
+        digraph = add_nodes_to_graph(digraph, [(parent, service + '_' + es_name)])
+    return digraph
+
+def add_edges_to_graph(digraph, edges):
+
+def add_nodes_to_graph(digraph, distinct_services):
+    for service in distinct_services:
+        digraph.node(str(service[1]))
+    return digraph
 
 
 def get_name_of_es_host(es_host, known_es_hosts):
