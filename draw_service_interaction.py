@@ -15,9 +15,13 @@ def main(args):
     # print find_service_id_by_port(5000, service_config)
     # print assoc_services.keys()
     service_config = load_config('conf/service.json')
-    starting_point = '/nginx-qa-infosight'
+    starting_point = '/nginx-beta-infosight'
     service_json = find_service_id(starting_point, service_config)
-    diagram = Digraph(comment=args.dcos_cluster_name + " services interaction", engine='circo')
+    diagram = Digraph(comment=args.dcos_cluster_name + " services interaction",
+                      engine='circo',
+                      node_attr={'shape': 'box'},
+                      graph_attr={'splines': 'true', 'esep': '10'},
+                      edge_attr={'labelangle': '0'}, format='png')
     all_es_hosts = get_elasticsearch_list(service_config)
     assoc_services = service_json['env']
     oculus_services = \
@@ -34,7 +38,24 @@ def main(args):
     # print oculus_es
 
     diagram.node(starting_point)
-    diagram = add_nodes_to_graph(diagram, infosight_services)
+    infosight_cluster = Digraph(comment="Infosight Cluster",
+                                node_attr={'color':'blue'})
+    oculus_cluster = Digraph(comment="Oculus Cluster", node_attr={'color':'red'})
+    es_cluster = Digraph(comment="Elasticsearch Cluster", node_attr={'color':'green'})
+
+    infosight_cluster = add_nodes_to_graph(infosight_cluster, infosight_services)
+    oculus_cluster = add_nodes_to_graph(oculus_cluster, oculus_services)
+    es_cluster = add_es_nodes_to_graph(es_cluster, infosight_es)
+    es_cluster = add_es_nodes_to_graph(es_cluster, oculus_es)
+
+    diagram.subgraph(infosight_cluster)
+    diagram.subgraph(oculus_cluster)
+    diagram.subgraph(es_cluster)
+
+    # oculus_cluster = add_edge_to_graph(oculus_cluster, oculus_services)
+    # infosight_cluster = add_edge_to_graph(infosight_cluster, infosight_services)
+    # es_cluster = add_es_edge_to_graph(diagram, oculus_es)
+    # es_cluster = add_es_edge_to_graph(diagram, infosight_es)
     diagram = add_nodes_to_graph(diagram, oculus_services)
     diagram = add_es_nodes_to_graph(diagram, infosight_es)
     diagram = add_es_nodes_to_graph(diagram, oculus_es)
@@ -42,16 +63,16 @@ def main(args):
     diagram = add_edge_to_graph(diagram, oculus_services)
     diagram = add_es_edge_to_graph(diagram, oculus_es)
 
+
     diagram.render('meta/service_arch', view=False)
 
     return
 
 
 def add_es_edge_to_graph(digraph, services):
-    normalize_tuple = []
     for parent, middle, child in services:
-        normalize_tuple.append((parent, middle + '_' + child))
-    return add_edge_to_graph(digraph, normalize_tuple)
+        digraph.edge(parent, child, label=middle, constraint='false', decorate='true')
+    return digraph
 
 
 def add_edge_to_graph(digraph, services):
@@ -62,7 +83,7 @@ def add_edge_to_graph(digraph, services):
 
 def add_es_nodes_to_graph(digraph, es_nodes):
     for parent, service, es_name in es_nodes:
-        digraph = add_nodes_to_graph(digraph, [(parent, service + '_' + es_name)])
+        digraph = add_nodes_to_graph(digraph, [(parent, es_name)])
     return digraph
 
 
