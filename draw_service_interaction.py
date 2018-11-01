@@ -11,11 +11,9 @@ from graphviz import Digraph
 
 
 def main(args):
-    # get_latest_configuration(args)
-    # print find_service_id_by_port(5000, service_config)
-    # print assoc_services.keys()
+    get_latest_configuration(args)
     service_config = load_config('conf/service.json')
-    starting_point = '/nginx-beta-infosight'
+    starting_point = args.starting_point
     service_json = find_service_id(starting_point, service_config)
     diagram = Digraph(comment=args.dcos_cluster_name + " services interaction",
                       engine='circo',
@@ -27,21 +25,17 @@ def main(args):
     oculus_services = \
         get_associated_services(assoc_services, 'OCULUS',
                                 service_config, starting_point)
-    # print oculus_services
     infosight_services = \
         get_associated_services(assoc_services, 'INFOSIGHT',
                                 service_config, starting_point)
-    # print infosight_services
     infosight_es = get_es_of_api(infosight_services, all_es_hosts, service_config)
-    # print infosight_es
     oculus_es = get_es_of_api(oculus_services, all_es_hosts, service_config)
-    # print oculus_es
 
     diagram.node(starting_point)
     infosight_cluster = Digraph(comment="Infosight Cluster",
-                                node_attr={'color':'blue'})
-    oculus_cluster = Digraph(comment="Oculus Cluster", node_attr={'color':'red'})
-    es_cluster = Digraph(comment="Elasticsearch Cluster", node_attr={'color':'green'})
+                                node_attr={'color': 'blue'})
+    oculus_cluster = Digraph(comment="Oculus Cluster", node_attr={'color': 'red'})
+    es_cluster = Digraph(comment="Elasticsearch Cluster", node_attr={'color': 'green'})
 
     infosight_cluster = add_nodes_to_graph(infosight_cluster, infosight_services)
     oculus_cluster = add_nodes_to_graph(oculus_cluster, oculus_services)
@@ -52,17 +46,12 @@ def main(args):
     diagram.subgraph(oculus_cluster)
     diagram.subgraph(es_cluster)
 
-    # oculus_cluster = add_edge_to_graph(oculus_cluster, oculus_services)
-    # infosight_cluster = add_edge_to_graph(infosight_cluster, infosight_services)
-    # es_cluster = add_es_edge_to_graph(diagram, oculus_es)
-    # es_cluster = add_es_edge_to_graph(diagram, infosight_es)
     diagram = add_nodes_to_graph(diagram, oculus_services)
     diagram = add_es_nodes_to_graph(diagram, infosight_es)
     diagram = add_es_nodes_to_graph(diagram, oculus_es)
     diagram = add_edge_to_graph(diagram, infosight_services)
     diagram = add_edge_to_graph(diagram, oculus_services)
     diagram = add_es_edge_to_graph(diagram, oculus_es)
-
 
     diagram.render('meta/service_arch', view=False)
 
@@ -108,10 +97,8 @@ def get_es_of_api(services_list, all_es_hosts, service_config):
             service_json = find_service_id(service_id, service_config)
             if 'env' in service_json:
                 for service, es_hosts in service_json['env'].items():
-                    # print service, es_hosts
                     if pattern in service:
                         es_name = get_name_of_es_host(es_hosts, all_es_hosts)
-                        # print es_name
                         linked_es.append((service_id, service.split(pattern)[1],
                                           es_name))
     return linked_es
@@ -140,7 +127,6 @@ def get_elasticsearch_name(elastic_host):
 def find_service_id_by_port(service_port, service_config):
     for service in service_config:
         if 'container' in service:
-            # print service['container']
             if 'portMappings' in service['container']:
                 for port_mapping in service['container']['portMappings']:
                     if service_port == port_mapping['servicePort']:
@@ -151,7 +137,6 @@ def get_associated_services(assoc_services, pattern, service_config, starting_po
     services = list()
     for key in assoc_services.keys():
         if pattern in key:
-            # print assoc_services[key].split(':')[1]
             services.append((starting_point,
                              find_service_id_by_port(int(assoc_services[key].split(':')[1]), service_config)
                              ))
@@ -192,19 +177,16 @@ def get_latest_configuration(args):
         return
     else:
         script_dir = os.path.dirname(__file__)
-        # print script_dir
         credentials_file_loc = os.path.join(script_dir, args.credentials)
-        # print credentials_file_loc
         with open(credentials_file_loc, 'r') as credentials:
             credentials = json.load(credentials)
-            # print credentials
             print("==Trying to connect to dcos cluster "
                   + args.dcos_cluster_name)
             command = clusterAttach.substitute(dcos_cluster_name=args.dcos_cluster_name)
             check_command_status(subprocess.call(command.split(' ')))
 
-            command = authLogin.substitute(username=credentials['sahil.sawhney']['username'],
-                                           password=credentials['sahil.sawhney']['password'])
+            command = authLogin.substitute(username=credentials['login']['username'],
+                                           password=credentials['login']['password'])
             check_command_status(subprocess.call(command.split(' ')))
 
             print ("==Getting the marathon json from cluster")
@@ -222,7 +204,9 @@ def parseArgs():
                         help='location of user credentials file required to login.')
     parser.add_argument('-u', '--dcos_cluster_name', type=str, required=True,
                         help='Cluster whose service interaction visualization'
-                             ' are required')
+                             ' is required.')
+    parser.add_argument('-s', '--starting_point', type=str, required=True,
+                        help='nginx service to start analysis from.')
     args = parser.parse_args()
     return args
 
