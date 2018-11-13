@@ -3,23 +3,23 @@ digraph {
 	graph [esep=10 splines=true]
 	node [shape=box]
 	edge [labelangle=0]
-	"nginx-beta-infosight"
+	"nginx-prod-infosight"
 	// Infosight Cluster
 	{
 		node [color=blue]
-		None
+		"/portal-release-76e8d7d/infosight-portal"
 	}
 	// Oculus Cluster
 	{
 		node [color=red]
-		"/analytics-release-192f41b/oculus-storeserv-ssmc-api"
+		None
 		"/analytics-release-192f41b/oculus-auth"
 		"/analytics-release-192f41b/oculus-storeonce-api"
 		"/analytics-release-192f41b/oculus-storeserv-api"
 		"/analytics-release-192f41b/oculus-search"
 		"/analytics-release-192f41b/oculus-salesaccount-api"
 		None
-		"/analytics-batch-13f93e3/oculus-storeserv-api"
+		"/grommet-release-72210b7/oculus-grommet"
 		"/analytics-release-192f41b/oculus-rmc-api"
 	}
 	// Elasticsearch Cluster
@@ -67,28 +67,15 @@ digraph {
 		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
 		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
 		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
-		elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-		elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-		elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-		elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-		elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-		elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
-		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
-		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
-		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
-		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
-		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
-		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
 	}
-	"/analytics-release-192f41b/oculus-storeserv-ssmc-api"
+	None
 	"/analytics-release-192f41b/oculus-auth"
 	"/analytics-release-192f41b/oculus-storeonce-api"
 	"/analytics-release-192f41b/oculus-storeserv-api"
 	"/analytics-release-192f41b/oculus-search"
 	"/analytics-release-192f41b/oculus-salesaccount-api"
 	None
-	"/analytics-batch-13f93e3/oculus-storeserv-api"
+	"/grommet-release-72210b7/oculus-grommet"
 	"/analytics-release-192f41b/oculus-rmc-api"
 	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
 	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
@@ -132,36 +119,16 @@ digraph {
 	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
 	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
 	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
-	elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-	elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-	elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-	elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-	elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-	elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
-	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
-	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
-	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
-	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
-	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
-	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
-	"nginx-beta-infosight" -> None [constraint=false]
-	"nginx-beta-infosight" -> "/analytics-release-192f41b/oculus-storeserv-ssmc-api" [constraint=false]
-	"nginx-beta-infosight" -> "/analytics-release-192f41b/oculus-auth" [constraint=false]
-	"nginx-beta-infosight" -> "/analytics-release-192f41b/oculus-storeonce-api" [constraint=false]
-	"nginx-beta-infosight" -> "/analytics-release-192f41b/oculus-storeserv-api" [constraint=false]
-	"nginx-beta-infosight" -> "/analytics-release-192f41b/oculus-search" [constraint=false]
-	"nginx-beta-infosight" -> "/analytics-release-192f41b/oculus-salesaccount-api" [constraint=false]
-	"nginx-beta-infosight" -> None [constraint=false]
-	"nginx-beta-infosight" -> "/analytics-batch-13f93e3/oculus-storeserv-api" [constraint=false]
-	"nginx-beta-infosight" -> "/analytics-release-192f41b/oculus-rmc-api" [constraint=false]
-	"/analytics-release-192f41b/oculus-storeserv-ssmc-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STORESERV constraint=false decorate=true]
-	"/analytics-release-192f41b/oculus-storeserv-ssmc-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=SALESACCOUNT constraint=false decorate=true]
-	"/analytics-release-192f41b/oculus-storeserv-ssmc-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=AUTH constraint=false decorate=true]
-	"/analytics-release-192f41b/oculus-storeserv-ssmc-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STOREONCE constraint=false decorate=true]
-	"/analytics-release-192f41b/oculus-storeserv-ssmc-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=RMC constraint=false decorate=true]
-	"/analytics-release-192f41b/oculus-storeserv-ssmc-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STOREVIRTUAL constraint=false decorate=true]
-	"/analytics-release-192f41b/oculus-storeserv-ssmc-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=MAIL constraint=false decorate=true]
+	"nginx-prod-infosight" -> "/portal-release-76e8d7d/infosight-portal" [constraint=false]
+	"nginx-prod-infosight" -> None [constraint=false]
+	"nginx-prod-infosight" -> "/analytics-release-192f41b/oculus-auth" [constraint=false]
+	"nginx-prod-infosight" -> "/analytics-release-192f41b/oculus-storeonce-api" [constraint=false]
+	"nginx-prod-infosight" -> "/analytics-release-192f41b/oculus-storeserv-api" [constraint=false]
+	"nginx-prod-infosight" -> "/analytics-release-192f41b/oculus-search" [constraint=false]
+	"nginx-prod-infosight" -> "/analytics-release-192f41b/oculus-salesaccount-api" [constraint=false]
+	"nginx-prod-infosight" -> None [constraint=false]
+	"nginx-prod-infosight" -> "/grommet-release-72210b7/oculus-grommet" [constraint=false]
+	"nginx-prod-infosight" -> "/analytics-release-192f41b/oculus-rmc-api" [constraint=false]
 	"/analytics-release-192f41b/oculus-auth" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STORESERV constraint=false decorate=true]
 	"/analytics-release-192f41b/oculus-auth" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=SALESACCOUNT constraint=false decorate=true]
 	"/analytics-release-192f41b/oculus-auth" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=AUTH constraint=false decorate=true]
@@ -197,12 +164,6 @@ digraph {
 	"/analytics-release-192f41b/oculus-salesaccount-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=RMC constraint=false decorate=true]
 	"/analytics-release-192f41b/oculus-salesaccount-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STOREVIRTUAL constraint=false decorate=true]
 	"/analytics-release-192f41b/oculus-salesaccount-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=MAIL constraint=false decorate=true]
-	"/analytics-batch-13f93e3/oculus-storeserv-api" -> elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4 [label=STORESERV constraint=false decorate=true]
-	"/analytics-batch-13f93e3/oculus-storeserv-api" -> elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4 [label=SALESACCOUNT constraint=false decorate=true]
-	"/analytics-batch-13f93e3/oculus-storeserv-api" -> elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4 [label=AUTH constraint=false decorate=true]
-	"/analytics-batch-13f93e3/oculus-storeserv-api" -> elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4 [label=STOREONCE constraint=false decorate=true]
-	"/analytics-batch-13f93e3/oculus-storeserv-api" -> elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4 [label=RMC constraint=false decorate=true]
-	"/analytics-batch-13f93e3/oculus-storeserv-api" -> elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4 [label=MAIL constraint=false decorate=true]
 	"/analytics-release-192f41b/oculus-rmc-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STORESERV constraint=false decorate=true]
 	"/analytics-release-192f41b/oculus-rmc-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=SALESACCOUNT constraint=false decorate=true]
 	"/analytics-release-192f41b/oculus-rmc-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=AUTH constraint=false decorate=true]

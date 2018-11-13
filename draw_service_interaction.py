@@ -77,6 +77,12 @@ def add_es_nodes_to_graph(digraph, es_nodes):
 
 
 def add_nodes_to_graph(digraph, distinct_services):
+    # input:
+    #   digraph: this is the visualization object.
+    #   distinct_services: takes all the services which are related.
+    # takes the list of all the services and adds them to visualization as nodes.
+    # output:
+    #   digraph: updated visual object.
     for service in distinct_services:
         if service is not None:
             digraph.node(str(service[1]))
@@ -84,12 +90,28 @@ def add_nodes_to_graph(digraph, distinct_services):
 
 
 def get_name_of_es_host(es_host, known_es_hosts):
+    # input:
+    #   es_host: es hosts we want to know the name of.
+    #   known_es_hosts: list of known hosts with their names.
+    # finds the es_hosts in the known hosts list since we have all hosts' name in the es.
+    # output:
+    #   name: the name returned of the es host.
+
     for name, es_hosts in known_es_hosts.items():
         if es_host == es_hosts:
             return name
 
 
 def get_es_of_api(services_list, all_es_hosts, service_config):
+    # input:
+    #  services_list : list of service where we need to fine the es.
+    #  all_es_hosts  : to find the name of found es hosts.
+    #  service_config: contains the json of service.
+    # gets the es host associated with service and categorise them as follows
+    #   (parent_service, child_service, es_name)
+    # Output:
+    #  linked_es: contains the list of related es with the services.
+
     linked_es = []
     pattern = 'ELASTICSEARCH_HOSTS_'
     for parent, service_id in services_list:
@@ -105,12 +127,25 @@ def get_es_of_api(services_list, all_es_hosts, service_config):
 
 
 def find_service_id(service_id, service_config):
+    # input:
+    #  service_id: the name of the service.
+    #  service_config: the json object which has all the service details.
+    # Looks for the service in the service_config and snips the json of
+    # of the service with the given service_id.
+    # output:
+    #  service is returned if found. other wise None is returned. service contains the
+    # json of service with the name service_id.
+
     for service in service_config:
         if service_id in service['id']:
             return service
 
 
 def get_elasticsearch_list(service_config):
+    # input: service_config contains the json of the service.
+    # looks for the all unique hosts service are using and makes the array of it.
+    # output: returns the dictionary object with key es host name and value as
+    # es hosts.
     all_es_hosts = accumulate_all_elasticsearch(service_config)
     es_hosts_cluster_name = {}
     for es_host in all_es_hosts:
@@ -134,6 +169,17 @@ def find_service_id_by_port(service_port, service_config):
 
 
 def get_associated_services(assoc_services, pattern, service_config, starting_point):
+    # input:
+    #  assoc_services: takes the list of ports of associated services.
+    #  pattern: takes the Initial name of the service you are looking for.
+    #             for e.g. ELASTICSEARCH_HOST or OCULUS.
+    #  service_config: json of all the services.
+    #  starting_point: the starting point from where we started.
+    # looks for the service associated by searching the json. We call it match if:
+    #   the servicePort of service matches the port defined in assoc_services list.
+    # Output: the dict object where
+    #  key -> starting_point value -> service_id which was matched.
+
     services = list()
     for key in assoc_services.keys():
         if pattern in key:
@@ -144,6 +190,9 @@ def get_associated_services(assoc_services, pattern, service_config, starting_po
 
 
 def load_config(config_location):
+    # input: config_location: relative location of the json file>
+    # Loads the json file if the given locations is right.
+    # output: the json object the given file.
     service_file = open(config_location, 'r')
     service_json = json.load(service_file)
     service_file.close()
@@ -171,6 +220,9 @@ def accumulate_all_elasticsearch(service_config):
 
 
 def get_latest_configuration(args):
+    # input: args are command line arguments given.
+    # Logs into the cluster with given credentials and fetches the service.json.
+    # output: under conf/service.json the data is written in the file.
     if not os.path.exists(args.credentials):
         logging.warning('Location of credentials doesn\'t exist.'
                         ' Create credentials.json file')
