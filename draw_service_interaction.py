@@ -51,7 +51,7 @@ def main(args):
     diagram = add_es_nodes_to_graph(diagram, oculus_es)
     diagram = add_edge_to_graph(diagram, infosight_services)
     diagram = add_edge_to_graph(diagram, oculus_services)
-    diagram = add_es_edge_to_graph(diagram, oculus_es)
+    # diagram = add_es_edge_to_graph(diagram, oculus_es)
 
     diagram.render('meta/service_arch', view=False)
 
@@ -72,7 +72,8 @@ def add_edge_to_graph(digraph, services):
 
 def add_es_nodes_to_graph(digraph, es_nodes):
     for parent, service, es_name in es_nodes:
-        digraph = add_nodes_to_graph(digraph, [(parent, es_name)])
+        if es_name is not None:
+            digraph = add_nodes_to_graph(digraph, [(parent, es_name)])
     return digraph
 
 
