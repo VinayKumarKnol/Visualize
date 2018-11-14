@@ -51,7 +51,7 @@ def main(args):
     diagram = add_es_nodes_to_graph(diagram, oculus_es)
     diagram = add_edge_to_graph(diagram, infosight_services)
     diagram = add_edge_to_graph(diagram, oculus_services)
-    # diagram = add_es_edge_to_graph(diagram, oculus_es)
+    diagram = add_es_edge_to_graph(diagram, oculus_es)
 
     diagram.render('meta/service_arch', view=False)
 
@@ -122,6 +122,8 @@ def get_es_of_api(services_list, all_es_hosts, service_config):
                 for service, es_hosts in service_json['env'].items():
                     if pattern in service:
                         es_name = get_name_of_es_host(es_hosts, all_es_hosts)
+                        if es_name is None:
+                            es_name = get_elasticsearch_name(es_hosts)
                         linked_es.append((service_id, service.split(pattern)[1],
                                           es_name))
     return linked_es
