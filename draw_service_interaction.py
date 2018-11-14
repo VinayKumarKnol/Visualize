@@ -7,12 +7,13 @@ import subprocess
 from string import Template
 import logging
 import requests
+import checking_document
 from graphviz import Digraph
 
 
 def main(args):
     get_latest_configuration(args)
-    service_config = load_config('conf/service.json')
+    service_config = load_config(service_config_file_name)
     starting_point = args.starting_point
     service_json = find_service_id(starting_point, service_config)
     diagram = Digraph(comment=args.dcos_cluster_name + " services interaction",
@@ -53,7 +54,14 @@ def main(args):
     diagram = add_edge_to_graph(diagram, oculus_services)
     diagram = add_es_edge_to_graph(diagram, oculus_es)
 
-    diagram.render('meta/service_arch', view=False)
+    diagram.render(file_name, view=False)
+
+    checking_document.commit_file_to_repo(username=args.git_username,
+                                          repo=args.git_repo,
+                                          client_id=args.git_client_id,
+                                          client_secret=args.git_client_secret,
+                                          file_location=file_name+'.png',
+                                          branch=args.git_branch)
 
     return
 
@@ -246,7 +254,7 @@ def get_latest_configuration(args):
 
             print ("==Getting the marathon json from cluster")
             command_out = subprocess.check_output(getConfig.split(' '))
-            outFile_conf = open('conf/service.json', 'w')
+            outFile_conf = open(service_config_file_name, 'w')
             outFile_conf.write(command_out)
             outFile_conf.close()
             print \
@@ -262,6 +270,16 @@ def parseArgs():
                              ' is required.')
     parser.add_argument('-s', '--starting_point', type=str, required=True,
                         help='nginx service to start analysis from.')
+    parser.add_argument('-gu', '--git_username', type=str, required=True,
+                        help='your github id.')
+    parser.add_argument('-gr', '--git_repo', type=str, required=True,
+                        help='github repo to commit to.')
+    parser.add_argument('-gb', '--git_branch', type=str, required=True,
+                        help='github branch to commit to.')
+    parser.add_argument('-gcid', '--git_client_id', type=str, required=True,
+                        help='github oauth client id .')
+    parser.add_argument('-gcs', '--git_client_secret', type=str, required=True,
+                        help='github oauth client secret.')
     args = parser.parse_args()
     return args
 
@@ -270,6 +288,8 @@ args = parseArgs()
 clusterAttach = Template('dcos cluster attach $dcos_cluster_name')
 authLogin = Template('dcos auth login --username=$username --password=$password')
 getConfig = 'dcos marathon app list --json'
+file_name = 'meta/service_arch'
+service_config_file_name = 'conf/service.json'
 
 if __name__ == '__main__':
     exit(main(args))

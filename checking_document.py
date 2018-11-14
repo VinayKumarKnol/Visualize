@@ -1,7 +1,7 @@
 from string import Template
 import requests
 import json
-import base64
+from base64 import b64encode, b64decode
 import defaults_env
 
 
@@ -14,7 +14,7 @@ def authenticate_user(username, client_id, client_secret):
 
 def encode_file_before_commit(location_of_file):
     with open(location_of_file, 'r') as service_png:
-        return base64.b64encode(service_png.read())
+        return b64encode(service_png.read()).decode('utf-8')
 
 
 def is_file_in_repo(username, repo, file_location, branch):
@@ -24,6 +24,7 @@ def is_file_in_repo(username, repo, file_location, branch):
         path=file_location,
         branch=branch
     )
+    print repo_url
     return requests.get(repo_url).ok
 
 
@@ -41,11 +42,10 @@ def retrieve_sha_of_file(username, repo, file_location, branch):
 
 def commit_file_to_repo(username, client_id, client_secret, repo, file_location, branch):
     authenticate_user(username, client_id, client_secret)
-    repo_content_url = defaults_env.repo_content_url.substitute(
+    repo_commit_url = defaults_env.repo_commit_url.substitute(
         username=username,
         repo=repo,
-        path=file_location,
-        branch=branch
+        path=file_location
     )
     commit_meta_data = ""
     if is_file_in_repo(username, repo, file_location, branch) is True:
@@ -55,17 +55,18 @@ def commit_file_to_repo(username, client_id, client_secret, repo, file_location,
                        username=username,
                        email="vinay.kumar@knoldus.in",
                        branch=branch,
-                       sha_of_file=retrieve_sha_of_file(username))
+                       sha_of_file=retrieve_sha_of_file(username, repo, file_location, branch))
     else:
-        commit_meta_data = defaults_env.update_file_template. \
-            substitute(commit_message="Updated the service architecture for this app group...",
+        commit_meta_data = defaults_env.new_file_template. \
+            substitute(commit_message="created the service architecture for this app group...",
                        base64_content=encode_file_before_commit(file_location),
                        username=username,
                        email="vinay.kumar@knoldus.in",
-                       branch=branch,
-                       sha_of_file=retrieve_sha_of_file(username))
-
-    response = requests.put(repo_content_url, json=json.loads(commit_meta_data))
+                       branch=branch
+                       )
+    # print commit_meta_data
+    response = requests.put(repo_commit_url, data=commit_meta_data)
+    # print response.content
     if response.ok is True:
         print "Repo %s is updated with %s  @ %s" % (repo, file_location, branch)
     else:
