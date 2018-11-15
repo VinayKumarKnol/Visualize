@@ -7,7 +7,7 @@ import subprocess
 from string import Template
 import logging
 import requests
-import checking_document
+from git_commit_document import commit_file_to_repo
 from graphviz import Digraph
 
 
@@ -56,12 +56,12 @@ def main(args):
 
     diagram.render(file_name, view=False)
 
-    checking_document.commit_file_to_repo(username=args.git_username,
-                                          repo=args.git_repo,
-                                          client_id=args.git_client_id,
-                                          client_secret=args.git_client_secret,
-                                          file_location=file_name+'.png',
-                                          branch=args.git_branch)
+    commit_file_to_repo(username=args.git_username,
+                        repo=args.git_repo,
+                        client_id=args.git_client_id,
+                        client_secret=args.git_client_secret,
+                        file_location=file_name + '.png',
+                        branch=args.git_branch)
 
     return
 
@@ -194,9 +194,12 @@ def get_associated_services(assoc_services, pattern, service_config, starting_po
     services = list()
     for key in assoc_services.keys():
         if pattern in key:
-            services.append((starting_point,
-                             find_service_id_by_port(int(assoc_services[key].split(':')[1]), service_config)
-                             ))
+            try:
+                services.append((starting_point,
+                                 find_service_id_by_port(int(assoc_services[key].split(':')[1]), service_config)
+                                 ))
+            except IndexError:
+                print "Service called: %s doesn't have associated services" % starting_point
     return services
 
 
