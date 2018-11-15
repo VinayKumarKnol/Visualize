@@ -31,7 +31,7 @@ def commit_file_to_repo(username, client_id, client_secret, file_location, branc
     file_pointer, sha = operation_to_perfrom(target_repo, file_location, branch)
 
     document_to_put = open(file_location, 'r').read()
-
+    print target_repo+file_pointer.path
     if sha is not None:
         print('==Updating the file as it already exists...')
         target_repo.update_file(path=file_pointer.path,
