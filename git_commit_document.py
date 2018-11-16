@@ -29,17 +29,16 @@ def commit_file_to_repo(username, access_token, file_location, branch=DEFAULT_BR
     file_pointer, sha = operation_to_perform(target_repo, file_location, branch)
 
     document_to_put = open(file_location, 'r').read()
-    print target_repo + file_pointer.path
     if sha is not None:
         print('==Updating the file as it already exists...')
-        target_repo.update_file(path=file_pointer.path,
+        print str(target_repo.update_file(path=file_pointer.path,
                                 message="service_arch is update with new arch diagram..",
                                 content=document_to_put,
                                 sha=sha,
-                                branch=branch)
+                                branch=branch))
     else:
         print("=Creating the file in the repo as it doesn't exist...")
-        target_repo.create_file(path=file_location,
+        print str(target_repo.create_file(path=file_location,
                                 message="service_arch is being created for  branch %s " % branch,
                                 content=document_to_put,
-                                branch=branch)
+                                branch=branch))
