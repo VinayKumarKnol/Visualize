@@ -15,7 +15,6 @@ def operation_to_perfrom(target_repo, file_location, branch=DEFAULT_BRANCH_NAME)
 
 def commit_file_to_repo(username, access_token, file_location, branch=DEFAULT_BRANCH_NAME,
                         repo=DEFAULT_REPO_NAME):
-
     print('==Loggin in to github using oauth')
     git = Github(base_url=DEFAULT_BASE_URL,
                  login_or_token=access_token,
@@ -30,7 +29,7 @@ def commit_file_to_repo(username, access_token, file_location, branch=DEFAULT_BR
     file_pointer, sha = operation_to_perfrom(target_repo, file_location, branch)
 
     document_to_put = open(file_location, 'r').read()
-    print target_repo+file_pointer.path
+    print target_repo + file_pointer.path
     if sha is not None:
         print('==Updating the file as it already exists...')
         target_repo.update_file(path=file_pointer.path,
