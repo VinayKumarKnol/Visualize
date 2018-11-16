@@ -21,6 +21,7 @@ def commit_file_to_repo(username, client_id, client_secret, file_location, branc
                  client_id=client_id,
                  client_secret=client_secret,
                  per_page=100)
+    git.oauth_scopes
     print('==Getting user: %s' % username)
     user = git.get_user(login=username)
 

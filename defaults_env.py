@@ -29,3 +29,4 @@ update_file_template = Template('''
 }
 ''')
 
+SECRET_TOKEN = "e480aaf93f50e18e2f3db9b9999775de37ef6f77"

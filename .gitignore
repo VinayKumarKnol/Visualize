@@ -2,3 +2,5 @@
 *.json
 temp/
 *.pyc
+defaults_env.py
+
