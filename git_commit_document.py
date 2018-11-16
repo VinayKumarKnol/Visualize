@@ -13,15 +13,13 @@ def operation_to_perfrom(target_repo, file_location, branch=DEFAULT_BRANCH_NAME)
         return response, None
 
 
-def commit_file_to_repo(username, client_id, client_secret, file_location, branch=DEFAULT_BRANCH_NAME,
+def commit_file_to_repo(username, access_token, file_location, branch=DEFAULT_BRANCH_NAME,
                         repo=DEFAULT_REPO_NAME):
 
     print('==Loggin in to github using oauth')
     git = Github(base_url=DEFAULT_BASE_URL,
-                 client_id=client_id,
-                 client_secret=client_secret,
+                 login_or_token=access_token,
                  per_page=100)
-    git.oauth_scopes
     print('==Getting user: %s' % username)
     user = git.get_user(login=username)
 

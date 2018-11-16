@@ -58,8 +58,7 @@ def main(args):
 
     commit_file_to_repo(username=args.git_username,
                         repo=args.git_repo,
-                        client_id=args.git_client_id,
-                        client_secret=args.git_client_secret,
+                        access_token=args.git_access_token,
                         file_location=file_name + '.png',
                         branch=args.git_branch)
 
@@ -279,10 +278,8 @@ def parseArgs():
                         help='github repo to commit to.')
     parser.add_argument('-gb', '--git_branch', type=str, required=True,
                         help='github branch to commit to.')
-    parser.add_argument('-gcid', '--git_client_id', type=str, required=True,
-                        help='github oauth client id .')
-    parser.add_argument('-gcs', '--git_client_secret', type=str, required=True,
-                        help='github oauth client secret.')
+    parser.add_argument('-gt', '--git_access_token', type=str, required=True,
+                        help='github access token used to authorize the user.')
     args = parser.parse_args()
     return args
 
