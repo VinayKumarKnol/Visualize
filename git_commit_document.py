@@ -5,7 +5,7 @@ DEFAULT_REPO_NAME = 'Visualize'
 DEFAULT_BRANCH_NAME = 'using_git_plugin'
 
 
-def operation_to_perfrom(target_repo, file_location, branch=DEFAULT_BRANCH_NAME):
+def operation_to_perform(target_repo, file_location, branch=DEFAULT_BRANCH_NAME):
     response = target_repo.get_contents(file_location, ref=branch)
     if response.size / 100 is not 0:
         return response, response.sha
@@ -26,7 +26,7 @@ def commit_file_to_repo(username, access_token, file_location, branch=DEFAULT_BR
     target_repo = user.get_repo(repo)
 
     print('==checking if file exists..')
-    file_pointer, sha = operation_to_perfrom(target_repo, file_location, branch)
+    file_pointer, sha = operation_to_perform(target_repo, file_location, branch)
 
     document_to_put = open(file_location, 'r').read()
     print target_repo + file_pointer.path
