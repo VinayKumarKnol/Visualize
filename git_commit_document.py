@@ -40,6 +40,6 @@ def commit_file_to_repo(username, access_token, file_location, branch=DEFAULT_BR
     else:
         print("=Creating the file in the repo as it doesn't exist...")
         target_repo.create_file(path=file_location,
-                                message="service_arch is being created for this branch.",
+                                message="service_arch is being created for  branch %s " % branch,
                                 content=document_to_put,
                                 branch=branch)
