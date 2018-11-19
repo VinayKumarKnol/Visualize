@@ -334,7 +334,7 @@ clusterAttach = Template('dcos cluster attach $dcos_cluster_name')
 authLogin = Template('dcos auth login --username=$username --password=$password')
 getConfig = 'dcos marathon app list --json'
 file_name = 'meta/service_arch'
-
+service_config_file_name = 'conf/service.json'
 
 if __name__ == '__main__':
     exit(main(args))
