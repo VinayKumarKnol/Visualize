@@ -252,31 +252,21 @@ def get_latest_configuration(args):
     # input: args are command line arguments given.
     # Logs into the cluster with given credentials and fetches the service.json.
     # output: under conf/service.json the data is written in the file.
-    if not os.path.exists(args.credentials):
-        logging.warning('Location of credentials doesn\'t exist.'
-                        ' Create credentials.json file')
-        return
-    else:
-        script_dir = os.path.dirname(__file__)
-        credentials_file_loc = os.path.join(script_dir, args.credentials)
-        with open(credentials_file_loc, 'r') as credentials:
-            credentials = json.load(credentials)
-            print("==Trying to connect to dcos cluster "
-                  + args.dcos_cluster_name)
-            command = clusterAttach.substitute(dcos_cluster_name=args.dcos_cluster_name)
-            check_command_status(subprocess.call(command.split(' ')))
 
-            command = authLogin.substitute(username=credentials['login']['username'],
-                                           password=credentials['login']['password'])
-            check_command_status(subprocess.call(command.split(' ')))
-
-            print ("==Getting the marathon json from cluster")
-            command_out = subprocess.check_output(getConfig.split(' '))
-            outFile_conf = open(service_config_file_name, 'w')
-            outFile_conf.write(command_out)
-            outFile_conf.close()
-            print \
-                ("==json is now available at conf/service.json.")
+    script_dir = os.path.dirname(__file__)
+    print("==Trying to connect to dcos cluster "
+          + args.dcos_cluster_name)
+    command = clusterAttach.substitute(dcos_cluster_name=args.dcos_cluster_name)
+    check_command_status(subprocess.call(command.split(' ')))
+    command = authLogin.substitute(username=args.cluster_user_id,
+                                   password=args.cluster_user_password)
+    check_command_status(subprocess.call(command.split(' ')))
+    print("==Getting the marathon json from cluster")
+    command_out = subprocess.check_output(getConfig.split(' '))
+    outFile_conf = open(service_config_file_name, 'w')
+    outFile_conf.write(command_out)
+    outFile_conf.close()
+    print("==json is now available at conf/service.json.")
 
 
 def get_all_lagom_services(service_config):
@@ -285,8 +275,9 @@ def get_all_lagom_services(service_config):
         if '-lagom' in service['id']:
             if 'labels' in service.keys():
                 label = service['labels']
-                lagom_service_name = label['HAPROXY_0_HTTP_BACKEND_PROXYPASS_PATH']
-                all_lagom.append((lagom_service_name, service['id']))
+                if 'HAPROXY_0_HTTP_BACKEND_PROXYPASS_PATH' in label.keys():
+                    lagom_service_name = label['HAPROXY_0_HTTP_BACKEND_PROXYPASS_PATH']
+                    all_lagom.append((lagom_service_name, service['id']))
     return all_lagom
 
 
@@ -317,8 +308,10 @@ def get_lagom_of_api(services, all_lagom_services, service_config):
 
 def parseArgs():
     parser = argparse.ArgumentParser(description='Python service visualization engine')
-    parser.add_argument('-c', '--credentials', type=str, required=True,
-                        help='location of user credentials file required to login.')
+    parser.add_argument('-cu', '--cluster_user_id', type=str, required=True,
+                        help='email used to login in to the cluster.')
+    parser.add_argument('-cp', '--cluster_user_password', type=str, required=True,
+                        help='password used to login to the cluster.')
     parser.add_argument('-u', '--dcos_cluster_name', type=str, required=True,
                         help='Cluster whose service interaction visualization'
                              ' is required.')
