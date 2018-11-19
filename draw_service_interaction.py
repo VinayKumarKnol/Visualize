@@ -68,11 +68,11 @@ def main(args):
 
     diagram.render(file_name, view=False)
 
-    # commit_file_to_repo(username=args.git_username,
-    #                     repo=args.git_repo,
-    #                     access_token=args.git_access_token,
-    #                     file_location=file_name + '.png',
-    #                     branch=args.git_branch)
+    commit_file_to_repo(username=args.git_username,
+                        repo=args.git_repo,
+                        access_token=args.git_access_token,
+                        file_location=file_name + '.png',
+                        branch=args.git_branch)
 
     return
 
@@ -334,7 +334,7 @@ clusterAttach = Template('dcos cluster attach $dcos_cluster_name')
 authLogin = Template('dcos auth login --username=$username --password=$password')
 getConfig = 'dcos marathon app list --json'
 file_name = 'meta/service_arch'
-service_config_file_name = 'conf/service.json'
+
 
 if __name__ == '__main__':
     exit(main(args))
