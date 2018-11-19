@@ -7,8 +7,10 @@ import subprocess
 from string import Template
 import logging
 import requests
+from requests import exceptions
 from git_commit_document import commit_file_to_repo
 from graphviz import Digraph
+from urlparse import urlparse
 
 
 def main(args):
@@ -22,6 +24,8 @@ def main(args):
                       graph_attr={'splines': 'true', 'esep': '10'},
                       edge_attr={'labelangle': '0'}, format='png')
     all_es_hosts = get_elasticsearch_list(service_config)
+    all_lagom = get_all_lagom_services(service_config)
+
     assoc_services = service_json['env']
     oculus_services = \
         get_associated_services(assoc_services, 'OCULUS',
@@ -32,35 +36,43 @@ def main(args):
     infosight_es = get_es_of_api(infosight_services, all_es_hosts, service_config)
     oculus_es = get_es_of_api(oculus_services, all_es_hosts, service_config)
 
+    print oculus_services
+    oculus_lagom = get_lagom_of_api(oculus_services, all_lagom, service_config)
+
     diagram.node(starting_point)
     infosight_cluster = Digraph(comment="Infosight Cluster",
                                 node_attr={'color': 'blue'})
     oculus_cluster = Digraph(comment="Oculus Cluster", node_attr={'color': 'red'})
     es_cluster = Digraph(comment="Elasticsearch Cluster", node_attr={'color': 'green'})
+    lagom_cluster = Digraph(comment="Lagom Services Cluster", node_attr={'color': 'purple'})
 
     infosight_cluster = add_nodes_to_graph(infosight_cluster, infosight_services)
     oculus_cluster = add_nodes_to_graph(oculus_cluster, oculus_services)
+    lagom_cluster = add_nodes_to_graph(lagom_cluster, all_lagom)
+
     es_cluster = add_es_nodes_to_graph(es_cluster, infosight_es)
     es_cluster = add_es_nodes_to_graph(es_cluster, oculus_es)
 
     diagram.subgraph(infosight_cluster)
     diagram.subgraph(oculus_cluster)
     diagram.subgraph(es_cluster)
+    diagram.subgraph(lagom_cluster)
 
     diagram = add_nodes_to_graph(diagram, oculus_services)
     diagram = add_es_nodes_to_graph(diagram, infosight_es)
     diagram = add_es_nodes_to_graph(diagram, oculus_es)
     diagram = add_edge_to_graph(diagram, infosight_services)
     diagram = add_edge_to_graph(diagram, oculus_services)
+    diagram = add_edge_to_graph(diagram, oculus_lagom)
     diagram = add_es_edge_to_graph(diagram, oculus_es)
 
     diagram.render(file_name, view=False)
 
-    commit_file_to_repo(username=args.git_username,
-                        repo=args.git_repo,
-                        access_token=args.git_access_token,
-                        file_location=file_name + '.png',
-                        branch=args.git_branch)
+    # commit_file_to_repo(username=args.git_username,
+    #                     repo=args.git_repo,
+    #                     access_token=args.git_access_token,
+    #                     file_location=file_name + '.png',
+    #                     branch=args.git_branch)
 
     return
 
@@ -165,8 +177,12 @@ def get_elasticsearch_list(service_config):
 
 def get_elasticsearch_name(elastic_host):
     url = 'http://' + elastic_host.split(',')[0] + ':9200'
-    response = json.loads(requests.get(url).content)
-    return response['cluster_name']
+    try:
+        response = json.loads(requests.get(url).content)
+        return response['cluster_name']
+    except exceptions.RequestException:
+        print "%s is not reachable." % url
+        exit(1)
 
 
 def find_service_id_by_port(service_port, service_config):
@@ -261,6 +277,42 @@ def get_latest_configuration(args):
             outFile_conf.close()
             print \
                 ("==json is now available at conf/service.json.")
+
+
+def get_all_lagom_services(service_config):
+    all_lagom = []
+    for service in service_config:
+        if '-lagom' in service['id']:
+            if 'labels' in service.keys():
+                label = service['labels']
+                lagom_service_name = label['HAPROXY_0_HTTP_BACKEND_PROXYPASS_PATH']
+                all_lagom.append((lagom_service_name, service['id']))
+    return all_lagom
+
+
+def get_lagom_service_name(lagom_path, all_lagom_services):
+    for path, name in all_lagom_services:
+        if lagom_path in path:
+            return name
+
+
+def get_lagom_of_api(services, all_lagom_services, service_config):
+    lagom_of_api = []
+    if services is not None:
+        for parent, service_name in services:
+            if service_name is not None:
+                service_json = find_service_id(service_name, service_config)
+                if 'env' in service_json.keys():
+                    service_env = service_json['env']
+                    if 'LAGOM_SERVICE_ADDRESS' in service_env:
+                        lagom_url = urlparse(service_env['LAGOM_SERVICE_ADDRESS'])
+                        lagom_path = "/" + lagom_url.path.split('/')[-1]
+                        lagom_of_api.append(
+                            (service_name, get_lagom_service_name(lagom_path,
+                                                                  all_lagom_services)
+                             )
+                        )
+    return lagom_of_api
 
 
 def parseArgs():
