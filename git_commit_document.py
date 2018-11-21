@@ -1,4 +1,4 @@
-from github import Github
+from github import Github, GithubException
 
 DEFAULT_BASE_URL = 'https://api.github.com'
 DEFAULT_REPO_NAME = 'Visualize'
@@ -6,11 +6,19 @@ DEFAULT_BRANCH_NAME = 'using_git_plugin'
 
 
 def operation_to_perform(target_repo, file_location, branch=DEFAULT_BRANCH_NAME):
-    response = target_repo.get_contents(file_location, ref=branch)
-    if response.size / 100 is not 0:
+    try:
+        response = target_repo.get_contents(file_location, ref=branch)
         return response, response.sha
-    else:
-        return response, None
+    except GithubException as exception:
+        print exception.status
+        print("==Creating the file in the repo as it doesn't exist...")
+        response = target_repo.create_file(path=file_location,
+                                           message="Dummy service arch is file is created",
+                                           content="dummy",
+                                           branch=branch
+                                           )
+        response = target_repo.get_contents(file_location, ref=branch)
+        return response, response.sha
 
 
 def commit_file_to_repo(username, access_token, file_location, branch=DEFAULT_BRANCH_NAME,
@@ -37,8 +45,5 @@ def commit_file_to_repo(username, access_token, file_location, branch=DEFAULT_BR
                                           sha=sha,
                                           branch=branch))
     else:
-        print("=Creating the file in the repo as it doesn't exist...")
-        print str(target_repo.create_file(path=file_location,
-                                          message="service_arch is being created for  branch %s " % branch,
-                                          content=document_to_put,
-                                          branch=branch))
+        print ('==Either the folder meta/ is not created in the repo. \n'
+               '  Or The repo is not reachable.')

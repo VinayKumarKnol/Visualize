@@ -7,6 +7,10 @@ Usage
 -cp <password>
 -u Saturn \
 -s nginx-beta-infosight
+-gu VinayKumarKnol \ 
+-gr Visualize \ 
+-gb using_git_plugin \ 
+-gt <access_token>
 ```
 
 Requirements:

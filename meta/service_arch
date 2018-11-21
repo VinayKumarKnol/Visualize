@@ -1,67 +1,182 @@
-// Jupiter services interaction
+// Saturn services interaction
 digraph {
 	graph [esep=10 splines=true]
 	node [shape=box]
 	edge [labelangle=0]
-	"nginx-blackbox"
+	"nginx-prod-infosight"
 	// Infosight Cluster
 	{
 		node [color=blue]
-		"/analytics-develop-4ee0342/oculus-storeserv-ssmc-api"
+		"/portal-release-4f95330/infosight-portal"
 	}
 	// Oculus Cluster
 	{
 		node [color=red]
 		None
-		"/dev/oculus-grommet-yung"
-		"/grommet-master-8c7a194/oculus-grommet"
+		"/analytics-release-192f41b/oculus-auth"
+		"/analytics-release-192f41b/oculus-storeonce-api"
+		"/analytics-release-192f41b/oculus-storeserv-api"
+		"/analytics-release-192f41b/oculus-search"
+		"/analytics-release-192f41b/oculus-salesaccount-api"
 		None
-		None
-		None
-		None
-		None
-		"/nginx-external"
+		"/grommet-release-2bd5821/oculus-grommet"
+		"/analytics-release-192f41b/oculus-rmc-api"
 	}
 	// Elasticsearch Cluster
 	{
 		node [color=green]
-		elasticsearch_IS_Apollo_ES_H9
-		elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-		elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-		elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-		elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-		elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+		elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
 	}
 	// Lagom Services Cluster
 	{
 		node [color=purple]
-		"/beige/storeserv-lagom"
-		"/beige/entitlement-lagom"
-		"/beige/wes-lagom"
+		"/blue/storeserv-lagom"
+		"/green/storeserv-lagom"
+		"/green/entitlement-lagom"
 	}
 	None
-	"/dev/oculus-grommet-yung"
-	"/grommet-master-8c7a194/oculus-grommet"
+	"/analytics-release-192f41b/oculus-auth"
+	"/analytics-release-192f41b/oculus-storeonce-api"
+	"/analytics-release-192f41b/oculus-storeserv-api"
+	"/analytics-release-192f41b/oculus-search"
+	"/analytics-release-192f41b/oculus-salesaccount-api"
 	None
-	None
-	None
-	None
-	None
-	"/nginx-external"
-	elasticsearch_IS_Apollo_ES_H9
-	elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-	elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-	elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-	elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-	elasticsearch_SFRM_Demo_Elasticsearch_Internal_Houston4
-	"nginx-blackbox" -> "/analytics-develop-4ee0342/oculus-storeserv-ssmc-api" [constraint=false]
-	"nginx-blackbox" -> None [constraint=false]
-	"nginx-blackbox" -> "/dev/oculus-grommet-yung" [constraint=false]
-	"nginx-blackbox" -> "/grommet-master-8c7a194/oculus-grommet" [constraint=false]
-	"nginx-blackbox" -> None [constraint=false]
-	"nginx-blackbox" -> None [constraint=false]
-	"nginx-blackbox" -> None [constraint=false]
-	"nginx-blackbox" -> None [constraint=false]
-	"nginx-blackbox" -> None [constraint=false]
-	"nginx-blackbox" -> "/nginx-external" [constraint=false]
+	"/grommet-release-2bd5821/oculus-grommet"
+	"/analytics-release-192f41b/oculus-rmc-api"
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9
+	"nginx-prod-infosight" -> "/portal-release-4f95330/infosight-portal" [constraint=false]
+	"nginx-prod-infosight" -> None [constraint=false]
+	"nginx-prod-infosight" -> "/analytics-release-192f41b/oculus-auth" [constraint=false]
+	"nginx-prod-infosight" -> "/analytics-release-192f41b/oculus-storeonce-api" [constraint=false]
+	"nginx-prod-infosight" -> "/analytics-release-192f41b/oculus-storeserv-api" [constraint=false]
+	"nginx-prod-infosight" -> "/analytics-release-192f41b/oculus-search" [constraint=false]
+	"nginx-prod-infosight" -> "/analytics-release-192f41b/oculus-salesaccount-api" [constraint=false]
+	"nginx-prod-infosight" -> None [constraint=false]
+	"nginx-prod-infosight" -> "/grommet-release-2bd5821/oculus-grommet" [constraint=false]
+	"nginx-prod-infosight" -> "/analytics-release-192f41b/oculus-rmc-api" [constraint=false]
+	"/analytics-release-192f41b/oculus-storeserv-api" -> "/blue/storeserv-lagom" [constraint=false]
+	"/analytics-release-192f41b/oculus-auth" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STORESERV constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-auth" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=SALESACCOUNT constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-auth" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=AUTH constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-auth" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STOREONCE constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-auth" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=RMC constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-auth" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STOREVIRTUAL constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-auth" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=MAIL constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-storeonce-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STORESERV constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-storeonce-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=SALESACCOUNT constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-storeonce-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=AUTH constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-storeonce-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STOREONCE constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-storeonce-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=RMC constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-storeonce-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STOREVIRTUAL constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-storeonce-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=MAIL constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-storeserv-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STORESERV constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-storeserv-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=SALESACCOUNT constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-storeserv-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=AUTH constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-storeserv-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STOREONCE constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-storeserv-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=RMC constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-storeserv-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STOREVIRTUAL constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-storeserv-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=MAIL constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-search" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STORESERV constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-search" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=SALESACCOUNT constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-search" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=AUTH constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-search" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STOREONCE constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-search" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=RMC constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-search" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STOREVIRTUAL constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-search" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=MAIL constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-salesaccount-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STORESERV constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-salesaccount-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=SALESACCOUNT constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-salesaccount-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=AUTH constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-salesaccount-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STOREONCE constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-salesaccount-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=RMC constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-salesaccount-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STOREVIRTUAL constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-salesaccount-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=MAIL constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-rmc-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STORESERV constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-rmc-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=SALESACCOUNT constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-rmc-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=AUTH constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-rmc-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STOREONCE constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-rmc-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=RMC constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-rmc-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=STOREVIRTUAL constraint=false decorate=true]
+	"/analytics-release-192f41b/oculus-rmc-api" -> elasticsearch_SFRM_Production_Elasticsearch_Internal_Houston9 [label=MAIL constraint=false decorate=true]
 }
