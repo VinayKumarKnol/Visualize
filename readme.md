@@ -4,9 +4,9 @@ Usage
 ```
  python draw_service_interaction.py  \
 -cu <username>  \
--cp <password>
+-cp <password> \ 
 -u Saturn \
--s nginx-beta-infosight
+-s nginx-beta-infosight \
 -gu VinayKumarKnol \ 
 -gr Visualize \ 
 -gb using_git_plugin \ 
